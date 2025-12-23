@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const config = require('./config/config');
+const categoriaRoutes = require('./routes/categoriaRoutes');
 
 const app = express();
 
@@ -12,5 +13,11 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.json({ mensaje: "API Microservicio Salud Funcionando", env: config.NODE_ENV });
 });
+
+// Registro de rutas
+app.use('/api/categorias', categoriaRoutes);
+
+// Error Handler (importante dejarlo al final)
+// app.use(errorHandler);
 
 module.exports = app;
