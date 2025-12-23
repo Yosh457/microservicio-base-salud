@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const config = require('./config/config');
 const categoriaRoutes = require('./routes/categoriaRoutes');
+const errorHandler = require('./middlewares/errorMiddleware');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -15,9 +17,17 @@ app.get('/', (req, res) => {
 });
 
 // Registro de rutas
+app.use('/api/auth', authRoutes);
 app.use('/api/categorias', categoriaRoutes);
 
-// Error Handler (importante dejarlo al final)
-// app.use(errorHandler);
+// Manejo de rutas inexistentes (404)
+app.use((req, res, next) => {
+    const error = new Error(`La ruta ${req.originalUrl} no existe`);
+    error.statusCode = 404;
+    next(error);
+});
+
+// Manejo global de errores Middleware
+app.use(errorHandler);
 
 module.exports = app;
